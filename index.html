@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Nation Flag Pride Rally — CARE Foundation</title>
+  <style>
+    :root{ --saffron:#ff9933; --green:#138808; --white:#ffffff; --blue:#38b6ff; --ink:#0f172a; --tile-media:200px; --tile-media-wide:280px; --tile-min:320px; }
+    *{box-sizing:border-box}
+    body{font-family:"Segoe UI",system-ui,Arial,sans-serif;margin:0;background:var(--white);color:var(--ink);-webkit-font-smoothing:antialiased}
+
+/* Topbar */
+.topbar{position:sticky;top:0;background:linear-gradient(90deg,var(--saffron),var(--white),var(--green));padding:10px 6%;z-index:60;box-shadow:0 4px 18px rgba(0,0,0,.06)}
+.brand{display:flex;gap:12px;align-items:center;justify-content:center}
+.brand b{font-size:1.05rem}
+.badge{background:var(--blue);color:#fff;padding:6px 12px;border-radius:999px;font-weight:700;box-shadow:0 6px 14px rgba(0,0,0,.08);transition:transform .22s ease}
+.badge:hover{transform:translateY(-2px)}
+
+/* Wrap & grid */
+.wrap{padding:26px 6% 60px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(var(--tile-min,320px),1fr));gap:22px}
+
+/* Tile base */
+.tile{position:relative;border-radius:18px;overflow:hidden;background:rgba(255,255,255,.86);backdrop-filter:blur(10px) saturate(140%);box-shadow:0 8px 26px rgba(2,6,23,.06);transition:transform .35s ease,box-shadow .35s ease;cursor:pointer}
+.tile:hover{transform:translateY(-8px);box-shadow:0 18px 40px rgba(2,6,23,.12)}
+.media{height:var(--tile-media);overflow:hidden}
+/* taller media for wide tiles */
+.tile--wide .media{height:var(--tile-media-wide)}
+.media img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease}
+.tile:hover .media img{transform:scale(1.06)}
+.body{padding:16px}
+.kicker{display:inline-block;font-weight:700;font-size:.82rem;background:linear-gradient(90deg,var(--saffron),var(--blue),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.title{font-size:1.15rem;color:var(--ink);margin:8px 0}
+.desc{color:#334155;font-size:.95rem;line-height:1.6}
+
+/* ribbon */
+.ribbon{position:absolute;top:14px;left:-8px;background:var(--saffron);color:#fff;padding:6px 18px 6px 22px;border-top-right-radius:999px;border-bottom-right-radius:999px;font-weight:700;box-shadow:0 8px 18px rgba(2,6,23,.12)}
+
+/* flip card */
+.flip{perspective:1100px}
+.flip-inner{position:relative;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.flip:hover .flip-inner{transform:rotateY(180deg)}
+.flip-face{position:relative;min-height:260px}
+.front,.back{position:absolute;inset:0;border-radius:18px;overflow:hidden;backface-visibility:hidden}
+.back{transform:rotateY(180deg);background:linear-gradient(135deg,rgba(255,153,51,.06),rgba(19,136,8,.06))}
+
+/* equalizer */
+.equalizer{display:flex;gap:6px;align-items:flex-end;height:28px;margin:8px 0}
+.bar{width:6px;background:linear-gradient(180deg,var(--blue),var(--green));border-radius:6px;animation:beat 1s linear infinite}
+.bar:nth-child(2){animation-delay:.12s}
+.bar:nth-child(3){animation-delay:.24s}
+.bar:nth-child(4){animation-delay:.36s}
+.bar:nth-child(5){animation-delay:.48s}
+@keyframes beat{0%,100%{height:8px}50%{height:28px}}
+
+/* decorative animated border (pointer-events none so links clickable) */
+.tile::after{content:"";position:absolute;inset:0;border-radius:18px;padding:1px;background:linear-gradient(135deg,transparent,rgba(255,153,51,.22),transparent,rgba(19,136,8,.22),transparent);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .28s ease;pointer-events:none}
+.tile:hover::after{opacity:1}
+
+/* modal */
+.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,.6);z-index:1200;padding:20px}
+.modal.open{display:flex}
+.modal-card{width:100%;max-width:1100px;background:rgba(255,255,255,.98);border-radius:12px;overflow:hidden;position:relative}
+.modal-media{max-height:64vh;overflow:hidden;background:#000}
+.modal-media img,.modal-media iframe{width:100%;height:100%;display:block;object-fit:contain}
+.modal-body{padding:18px}
+.modal-title{font-size:1.2rem;color:var(--blue);margin:6px 0}
+.modal-desc{color:#334155;font-size:1rem;line-height:1.6}
+.close{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.9);border-radius:8px;padding:6px 8px;border:0;cursor:pointer}
+.nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.95);border-radius:999px;padding:8px 12px;border:0;cursor:pointer;font-size:18px}
+.nav.prev{left:-36px}
+.nav.next{right:-36px}
+@media(max-width:900px){.nav.prev{left:8px}.nav.next{right:8px}}
+
+/* responsive wide spans */
+@media(min-width:1100px){.tile--wide{grid-column:span 2}}
+@media(max-width:520px){.kicker:before{display:none}}
+/* responsive sizing tweaks */
+@media(max-width:480px){:root{--tile-media:170px; --tile-media-wide:210px; --tile-min:260px}}
+@media(min-width:1280px){:root{--tile-media:220px; --tile-media-wide:300px; --tile-min:340px}}
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="brand">
+      <b>Nation Flag Pride Rally</b>
+      <span class="badge">CARE Foundation</span>
+    </div>
+  </div>
+
+  <main class="wrap">
+    <div class="grid" id="grid">
+
+      <!-- ABOUT (tile) -->
+      <article class="tile tile--wide reveal" data-type="image" data-src="1.jpg" data-title="About — Nation Flag Pride Rally" data-desc="In a bid to preserve the dignity of India's national flag, CARE Foundation collects fallen flags and runs awareness rallies in line with the Flag Code of India.">
+        <div class="media"><img src="1.jpg" alt="About Project"></div>
+        <div class="body">
+          <div class="kicker">ABOUT • INITIATIVE LAUNCH</div>
+          <h3 class="title">Nation Flag Pride Rally — About the Project</h3>
+          <p class="desc">CARE Foundation preserves the dignity of India's national flag by collecting fallen flags, conducting rallies and teaching proper flag etiquette.</p>
+        </div>
+      </article>
+
+      <!-- 2012 RALLY -->
+      <article class="tile reveal" data-type="image" data-src="2.jpg" data-title="First Flag Pride Rally — 15 Aug 2012" data-desc="Our first Flag Pride Rally on 15 Aug 2012 united citizens to honor the Tricolor and spread awareness on respectful handling.">
+        <span class="ribbon">15 Aug 2012</span>
+        <div class="media"><img src="2.jpg" alt="First Rally"></div>
+        <div class="body">
+          <div class="kicker">TIMELINE • 2012</div>
+          <h3 class="title">First Flag Pride Rally</h3>
+          <p class="desc">The inaugural march brought communities together and set the tone for respectful flag handling across locations.</p>
+        </div>
+      </article>
+
+      <!-- SKITS FLIP -->
+      <article class="tile flip reveal" data-type="image" data-src="3.jpg" data-title="Special Skits Show" data-desc="Creative skits engaged communities and reinforced the importance of respecting national symbols.">
+        <div class="flip-inner">
+          <div class="front flip-face">
+            <div class="media"><img src="3.jpg" alt="Skits"></div>
+            <div class="body">
+              <div class="kicker">TIMELINE • AWARENESS</div>
+              <h3 class="title">Special Skits Show</h3>
+              <p class="desc">Street theatre made lessons memorable—turning etiquette into stories people remember.</p>
+            </div>
+          </div>
+          <div class="back flip-face">
+            <div class="body">
+              <div class="kicker">DETAIL • IMPACT</div>
+              <h3 class="title">Stories that Stick</h3>
+              <p class="desc">Performers demonstrated proper flag etiquette with roleplay and demonstrations targeted at all age groups.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- RADIO — wide tile with hover preview (video id) -->
+      <article id="radioTile" class="tile tile--wide reveal" data-type="video" data-video="nLW1VBw24G8" data-title="Radio City 91.1 FM Interview" data-desc="Our Radio City interview amplified the message to thousands.">
+        <div class="media">
+          <!-- thumbnail, replaced on hover with an iframe preview -->
+          <img src="https://img.youtube.com/vi/nLW1VBw24G8/hqdefault.jpg" alt="Radio Interview">
+        </div>
+        <div class="body">
+          <div class="kicker">TIMELINE • MEDIA</div>
+          <h3 class="title">Radio City 91.1 FM Interview</h3>
+          <div class="equalizer" aria-hidden="true">
+            <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+          </div>
+          <p class="desc">A broadcast conversation that invited more citizens to participate with pride.</p>
+          <div style="margin-top:10px"><a class="link" href="https://youtu.be/nLW1VBw24G8" target="_blank" rel="noopener">Watch full interview on YouTube</a></div>
+        </div>
+      </article>
+
+      <!-- NEW: Mission -->
+      <article class="tile reveal" data-type="image" data-src="5.jpg" data-title="Mission" data-desc="To uphold the dignity of the Indian national flag through education, respectful handling, and proper disposal — creating a culture of pride and responsibility.">
+        <div class="media"><img src="5.jpg" alt="Mission"></div>
+        <div class="body">
+          <div class="kicker">MISSION</div>
+          <h3 class="title">Our Mission</h3>
+          <p class="desc">Educate citizens, collect fallen flags, and ensure respectful disposal aligned with the Flag Code.</p>
+        </div>
+      </article>
+
+      <!-- NEW: Vision -->
+      <article class="tile reveal" data-type="image" data-src="6.jpg" data-title="Vision" data-desc="A nation where every citizen honors the tricolor and practices flag etiquette — fostering unity and civic pride for generations.">
+        <div class="media"><img src="6.jpg" alt="Vision"></div>
+        <div class="body">
+          <div class="kicker">VISION</div>
+          <h3 class="title">Our Vision</h3>
+          <p class="desc">A culture of pride where the flag is respected across communities, events, and daily life.</p>
+        </div>
+      </article>
+
+      <!-- NEW: Impact -->
+      <article class="tile reveal" data-type="image" data-src="7.jpg" data-title="Impact" data-desc="150+ rallies • 10,000+ flags collected • 50,000+ citizens reached through campaigns.">
+        <div class="media"><img src="7.jpg" alt="Impact"></div>
+        <div class="body">
+          <div class="kicker">IMPACT</div>
+          <h3 class="title">Our Impact</h3>
+          <p class="desc">150+ rallies · 10,000+ flags collected · 50,000+ citizens reached.</p>
+        </div>
+      </article>
+
+    </div>
+  </main>
+
+  <!-- modal (shared for images & video) -->
+  <div id="modal" class="modal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true">
+      <button class="close" id="modalClose">✕</button>
+      <button class="nav prev" id="modalPrev">◀</button>
+      <button class="nav next" id="modalNext">▶</button>
+      <div class="modal-media" id="modalMedia"></div>
+      <div class="modal-body">
+        <div class="modal-title" id="modalTitle"></div>
+        <div class="modal-desc" id="modalDesc"></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* Scroll reveal */
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); observer.unobserve(e.target) } });
+},{threshold:0.18});
+revealAll();
+function revealAll(){ reveals.forEach(r=>observer.observe(r)); }
+
+/* Collect tiles data */
+const tiles = Array.from(document.querySelectorAll('.tile'));
+const data = tiles.map(t=>({
+  type: t.dataset.type || 'image',
+  src: t.dataset.src || null,
+  video: t.dataset.video || null,
+  title: t.dataset.title || (t.querySelector('.title')?.textContent || ''),
+  desc: t.dataset.desc || (t.querySelector('.desc')?.textContent || '')
+}));
+
+/* Modal */
+const modal = document.getElementById('modal');
+const modalMedia = document.getElementById('modalMedia');
+const modalTitle = document.getElementById('modalTitle');
+const modalDesc = document.getElementById('modalDesc');
+const modalClose = document.getElementById('modalClose');
+const modalPrev = document.getElementById('modalPrev');
+const modalNext = document.getElementById('modalNext');
+let idx = 0;
+
+function openAt(i){
+  idx = (i+data.length)%data.length;
+  renderModal();
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden','false');
+}
+function closeModal(){ modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); stopMedia(); }
+function stopMedia(){ modalMedia.innerHTML=''; }
+
+function renderModal(){
+  stopMedia();
+  const item = data[idx];
+  modalTitle.textContent = item.title;
+  modalDesc.textContent = item.desc;
+  if(item.type==='video' || item.video){
+    const vid = item.video || item.src || '';
+    const iframe = document.createElement('iframe');
+    iframe.src = `https://www.youtube.com/embed/${vid}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+    iframe.style.width='100%'; iframe.style.height='100%';
+    modalMedia.appendChild(iframe);
+  } else {
+    const img = document.createElement('img');
+    img.src = item.src;
+    img.alt = item.title;
+    modalMedia.appendChild(img);
+  }
+}
+
+/* wire tiles */
+tiles.forEach((t,i)=>{ t.addEventListener('click', ()=> openAt(i) ); });
+
+modalClose.addEventListener('click', closeModal);
+modal.addEventListener('click', (e)=>{ if(e.target===modal) closeModal(); });
+modalPrev.addEventListener('click', ()=>{ idx = (idx-1+data.length)%data.length; renderModal(); });
+modalNext.addEventListener('click', ()=>{ idx = (idx+1)%data.length; renderModal(); });
+
+document.addEventListener('keydown',(e)=>{ if(modal.classList.contains('open')){ if(e.key==='ArrowLeft') modalPrev.click(); if(e.key==='ArrowRight') modalNext.click(); if(e.key==='Escape') closeModal(); } });
+
+/* Radio tile hover preview (muted autoplay iframe) */
+const radioTile = document.getElementById('radioTile');
+if(radioTile){
+  let previewAdded = false; let previewEl = null; const videoId = radioTile.dataset.video;
+  const thumb = radioTile.querySelector('.media');
+  radioTile.addEventListener('mouseenter', ()=>{
+    if(previewAdded) return;
+    previewEl = document.createElement('iframe');
+    previewEl.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&rel=0&modestbranding=1&playsinline=1`;
+    previewEl.style.width='100%'; previewEl.style.height='100%'; previewEl.frameBorder=0; previewEl.allow='autoplay';
+    const img = thumb.querySelector('img');
+    if(img) img.style.display='none';
+    thumb.appendChild(previewEl);
+    previewAdded = true;
+  });
+  radioTile.addEventListener('mouseleave', ()=>{
+    if(!previewAdded) return;
+    const img = thumb.querySelector('img');
+    if(img) img.style.display='block';
+    if(previewEl){ previewEl.remove(); previewEl=null; }
+    previewAdded=false;
+  });
+}
+</script>
+</body>
+</html>
